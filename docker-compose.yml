@@ -1,0 +1,18 @@
+# Runs the UI next to assetflow-be's compose stack (which must be running:
+# `docker compose --profile app up -d api worker` in that repo). The UI joins
+# that stack's network and reaches the API by its service name.
+name: assetflow-fe
+
+services:
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT:-3000}:80"
+    environment:
+      API_UPSTREAM: ${API_UPSTREAM:-http://api:8080}
+    networks: [assetflow]
+
+networks:
+  assetflow:
+    name: assetflow_default
+    external: true
